@@ -16,8 +16,16 @@
  * chose and initiate a connection to the wallet.
  * Wallets inject their Initial API under the `window.midnight` object.
  * A single wallet can inject multiple instances of the Initial API, e.g. when supporting multiple versions.
+ * Together with UUID under which the initial API is installed, the contents are compatible with the [draft of CAIP-372](https://github.com/ChainAgnostic/CAIPs/pull/372/files).
  */
 export type InitialAPI = {
+  /**
+   * Wallet identifier, in a reverse DNS notation (e.g. `com.example.wallet`).
+   * Wallets should keep this identifier stable throughout the lifecycle of the product.
+   * DApps can use this property to identify the wallet, but should be prepared to handle
+   * values that are unknown, invalid, or potentially misleading, similar to handling user agent strings in web browsers.
+   */
+  rdns: string;
   /**
    * Wallet name, expected to be displayed to the user.
    * As such, DApps need to sanitize the name to prevent XSS when displaying it to the user. An example
@@ -37,7 +45,7 @@ export type InitialAPI = {
    */
   apiVersion: string;
   /**
-   * Connect to wallet, hinting desired network id
+   * Connect to wallet, hinting desired network id; Use 'mainnet' for mainnet.
    */
   connect: (networkId: string) => Promise<ConnectedAPI>;
 };
@@ -104,7 +112,7 @@ export type WalletConnectedAPI = {
    *
    * This method is expected to be used by DApps when interacting with contracts - in many cases when contracts interact with native tokens, where wallet may need to add inputs and outputs to an existing intent to properly balance the transaction.
    *
-   * In relation to Ledger API (`@midnight-ntwrk/ledger`), this method expects a serialized transaction of type `Transaction<SignatureErased, Proof, PreBinding>`
+   * In relation to Ledger API (`@midnight-ntwrk/ledger-v6`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, PreBinding>`
    */
   balanceUnsealedTransaction(tx: string): Promise<{ tx: string }>;
   /**
@@ -115,7 +123,7 @@ export type WalletConnectedAPI = {
    * This method is mainly expected to be used by DApps when they operate on transactions created by the wallet or when the DApp wants to be sure that wallet performs balancing in a separate intent.
    * In such case, it is important to remember that some contracts might make use of fallible sections, in which case wallet won't be able to properly balance the transaction. In such cases, the DApp should use {@link balanceUnsealedTransaction} instead.
    *
-   * In relation to Ledger API (`@midnight-ntwrk/ledger`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, Binding>`
+   * In relation to Ledger API (`@midnight-ntwrk/ledger-v6`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, Binding>`
    */
   balanceSealedTransaction(tx: string): Promise<{ tx: string }>;
   /**
