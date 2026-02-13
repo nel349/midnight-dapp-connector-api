@@ -116,7 +116,7 @@ export type WalletConnectedAPI = {
    * Options:
    * `payFees` - whether wallet should pay fees for the issued transaction or not, true by default
    */
-  balanceUnsealedTransaction(tx: string, options?: {payFees?: boolean}): Promise<{ tx: string }>;
+  balanceUnsealedTransaction(tx: string, options?: { payFees?: boolean }): Promise<{ tx: string }>;
   /**
    * Take sealed transaction (with proofs, signatures and cryptographically bound),
    * pay fees, add necessary inputs and outputs to remove imbalances from it,
@@ -129,17 +129,20 @@ export type WalletConnectedAPI = {
    * Options:
    * `payFees` - whether wallet should pay fees for the issued transaction or not, true by default
    */
-  balanceSealedTransaction(tx: string, options?: {payFees?: boolean}): Promise<{ tx: string }>;
+  balanceSealedTransaction(tx: string, options?: { payFees?: boolean }): Promise<{ tx: string }>;
   /**
    * Initialize a transfer transaction with desired outputs
    *
    * Options:
    * `payFees` - whether wallet should pay fees for the issued transaction or not, true by default
    */
-  makeTransfer(desiredOutputs: DesiredOutput[], options?: {payFees?: boolean}): Promise<{ tx: string }>;
+  makeTransfer(
+    desiredOutputs: DesiredOutput[],
+    options?: { payFees?: boolean },
+  ): Promise<{ tx: string }>;
   /**
    * Initialize a transaction with unbalanced intent containing desired inputs and outputs.
-   * Primary use-case for this method is to create a transaction, which inits a swap
+   * Primary use-case for this method is to create a transacti2on, which inits a swap
    * Options:
    * `intentId` - what id use for created intent:
    *              use 1 to ensure no transaction merging will result in actions executed before created intent in the same transaction
