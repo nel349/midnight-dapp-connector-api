@@ -124,17 +124,17 @@ type InitActions = {
    * data for cryptographic binding), pay fees, add necessary inputs and outputs 
    * to remove imbalances from it, returning a transaction ready for submission
    */
-  balanceUnsealedTransaction(tx: string): Promise<{tx: string}>;
+  balanceUnsealedTransaction(tx: string, options?: {payFees?: boolean}): Promise<{tx: string}>;
   /**
    * Take sealed transaction (with proofs, signatures and cryptographically bound), 
    * pay fees, add necessary inputs and outputs to remove imbalances from it, 
    * returning a transaction ready for submission
    */
-  balanceSealedTransaction(tx: string): Promise<{tx: string}>;
+  balanceSealedTransaction(tx: string, options?: {payFees?: boolean}): Promise<{tx: string}>;
   /**
    * Initialize a transfer transaction with desired outputs
    */
-  makeTransfer(desiredOutputs: DesiredOutput[]): Promise<{tx: string}>;
+  makeTransfer(desiredOutputs: DesiredOutput[], options?: {payFees?: boolean}): Promise<{tx: string}>;
   /**
    * Initialize a transaction with unbalanced intent containing desired inputs and outputs.
    * Primary use-case for this method is to create a transaction, which inits a swap
@@ -347,7 +347,9 @@ There exist 5 methods related to transactions: `makeTransfer`, `makeIntent`, `ba
 - `makeTransfer` - ask wallet to transfer provided amounts of tokens to provided recipients
 - `makeIntent` - Midnight's transaction structure allows implementing atomic swaps through usage of intents and Zswap. `makeIntent` allows to create a purposefully imbalanced transaction (with surplus of tokens provided according to the `desiredInputs` balances and shaortage of tokens according to `desiredOutputs`), so that other party can issue a "mirrored" version of the call or be asked to balance such transaction (e.g. with the `balanceTransaction` method).
 
-1. When a call returning transaction is made (in methods `balanceTransaction`, `makeTransfer` or `makeIntent`), wallet must return a transaction ready to be submitted to the network, that is one that is cryptographically bound, contains needed signatures, and contains needed proofs.
+All of the methods which create or complement a transaction (`makeTransfer`, `makeIntent`, `balanceSealedTransaction`, `balanceUnsealedTransaction`) take an option `payFees`. It defaults to true. If it is set to false, wallet must not issue `DustSpend` to pay fees in the transaction. Paying fees has timing implications (Dust grace period is in a range of hours, while intent TTL can be even 2 weeks ahead), but also functional ones - the DApp might be implemented in a way, which expects the fee payment to be performed by a dedicated service.
+
+1. When a call returning transaction is made (in methods `balanceTransaction`, `makeTransfer` or `makeIntent`), wallet must return a transaction ready to be submitted to the network, that is one that is cryptographically bound, contains needed signatures, and contains needed proofs. It might contain imbalances though, depending on exact method used and options provided.
 2. The DApp, when asking wallet to submit a transaction, must provide a transaction ready to be submitted to the network, that is one that is cryptographically bound, contains signatures, and contains proofs.
 3. The DApp, when providing a transaction in method like `balanceTransaction` or `submitTransaction`, must provide a transaction compatible with the network it is connected to.
 

@@ -112,9 +112,11 @@ export type WalletConnectedAPI = {
    *
    * This method is expected to be used by DApps when interacting with contracts - in many cases when contracts interact with native tokens, where wallet may need to add inputs and outputs to an existing intent to properly balance the transaction.
    *
-   * In relation to Ledger API (`@midnight-ntwrk/ledger-v6`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, PreBinding>`
+   * In relation to Ledger API (`@midnight-ntwrk/ledger-v8`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, PreBinding>`
+   * Options:
+   * `payFees` - whether wallet should pay fees for the issued transaction or not, true by default
    */
-  balanceUnsealedTransaction(tx: string): Promise<{ tx: string }>;
+  balanceUnsealedTransaction(tx: string, options?: {payFees?: boolean}): Promise<{ tx: string }>;
   /**
    * Take sealed transaction (with proofs, signatures and cryptographically bound),
    * pay fees, add necessary inputs and outputs to remove imbalances from it,
@@ -123,13 +125,18 @@ export type WalletConnectedAPI = {
    * This method is mainly expected to be used by DApps when they operate on transactions created by the wallet or when the DApp wants to be sure that wallet performs balancing in a separate intent.
    * In such case, it is important to remember that some contracts might make use of fallible sections, in which case wallet won't be able to properly balance the transaction. In such cases, the DApp should use {@link balanceUnsealedTransaction} instead.
    *
-   * In relation to Ledger API (`@midnight-ntwrk/ledger-v6`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, Binding>`
+   * In relation to Ledger API (`@midnight-ntwrk/ledger-v8`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, Binding>`
+   * Options:
+   * `payFees` - whether wallet should pay fees for the issued transaction or not, true by default
    */
-  balanceSealedTransaction(tx: string): Promise<{ tx: string }>;
+  balanceSealedTransaction(tx: string, options?: {payFees?: boolean}): Promise<{ tx: string }>;
   /**
    * Initialize a transfer transaction with desired outputs
+   *
+   * Options:
+   * `payFees` - whether wallet should pay fees for the issued transaction or not, true by default
    */
-  makeTransfer(desiredOutputs: DesiredOutput[]): Promise<{ tx: string }>;
+  makeTransfer(desiredOutputs: DesiredOutput[], options?: {payFees?: boolean}): Promise<{ tx: string }>;
   /**
    * Initialize a transaction with unbalanced intent containing desired inputs and outputs.
    * Primary use-case for this method is to create a transaction, which inits a swap
@@ -187,7 +194,7 @@ export type HintUsage = {
    * Hint usage of methods to the wallet.
    *
    * DApps should use this method to hint to the wallet what methods are expected to be used
-   * in a certain context (be it whole session, single view, or a user flow - it is up to DApp).
+   * in a certain context (be it a whole session, single view, or a user flow - it is up to DApp).
    * The wallet can use these calls as an opportunity to ask user for permissions and in such case - resolve the promise only after the user has granted the permissions.
    */
   hintUsage(methodNames: Array<keyof WalletConnectedAPI>): Promise<void>;
