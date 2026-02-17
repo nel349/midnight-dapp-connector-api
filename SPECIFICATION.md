@@ -349,9 +349,9 @@ There exist 5 methods related to transactions: `makeTransfer`, `makeIntent`, `ba
 
 All of the methods which create or complement a transaction (`makeTransfer`, `makeIntent`, `balanceSealedTransaction`, `balanceUnsealedTransaction`) take an option `payFees`. It defaults to true. If it is set to false, wallet must not issue `DustSpend` to pay fees in the transaction. Paying fees has timing implications (Dust grace period is in a range of hours, while intent TTL can be even 2 weeks ahead), but also functional ones - the DApp might be implemented in a way, which expects the fee payment to be performed by a dedicated service.
 
-1. When a call returning transaction is made (in methods `balanceTransaction`, `makeTransfer` or `makeIntent`), wallet must return a transaction ready to be submitted to the network, that is one that is cryptographically bound, contains needed signatures, and contains needed proofs. It might contain imbalances though, depending on exact method used and options provided.
+1. When a call returning transaction is made (in methods `balanceSealedTransaction`, `balanceUnsealedTransaction`, `makeTransfer` or `makeIntent`), wallet must return a transaction ready to be submitted to the network, that is one that is cryptographically bound, contains needed signatures, and contains needed proofs. It might contain imbalances though, depending on exact method used and options provided.
 2. The DApp, when asking wallet to submit a transaction, must provide a transaction ready to be submitted to the network, that is one that is cryptographically bound, contains signatures, and contains proofs.
-3. The DApp, when providing a transaction in method like `balanceTransaction` or `submitTransaction`, must provide a transaction compatible with the network it is connected to.
+3. The DApp, when providing a transaction in method like `balanceSealedTransaction` or `submitTransaction`, must provide a transaction compatible with the network it is connected to.
 
 
 #### Signing

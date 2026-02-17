@@ -112,7 +112,7 @@ export type WalletConnectedAPI = {
    *
    * This method is expected to be used by DApps when interacting with contracts - in many cases when contracts interact with native tokens, where wallet may need to add inputs and outputs to an existing intent to properly balance the transaction.
    *
-   * In relation to Ledger API (`@midnight-ntwrk/ledger-v8`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, PreBinding>`
+   * In relation to Ledger API (`@midnight-ntwrk/ledger-v<N>`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, PreBinding>`
    * Options:
    * `payFees` - whether wallet should pay fees for the issued transaction or not, true by default
    */
@@ -125,7 +125,7 @@ export type WalletConnectedAPI = {
    * This method is mainly expected to be used by DApps when they operate on transactions created by the wallet or when the DApp wants to be sure that wallet performs balancing in a separate intent.
    * In such case, it is important to remember that some contracts might make use of fallible sections, in which case wallet won't be able to properly balance the transaction. In such cases, the DApp should use {@link balanceUnsealedTransaction} instead.
    *
-   * In relation to Ledger API (`@midnight-ntwrk/ledger-v8`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, Binding>`
+   * In relation to Ledger API (`@midnight-ntwrk/ledger-v<N>`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, Binding>`
    * Options:
    * `payFees` - whether wallet should pay fees for the issued transaction or not, true by default
    */
@@ -142,7 +142,7 @@ export type WalletConnectedAPI = {
   ): Promise<{ tx: string }>;
   /**
    * Initialize a transaction with unbalanced intent containing desired inputs and outputs.
-   * Primary use-case for this method is to create a transacti2on, which inits a swap
+   * Primary use-case for this method is to create a transaction, which inits a swap
    * Options:
    * `intentId` - what id use for created intent:
    *              use 1 to ensure no transaction merging will result in actions executed before created intent in the same transaction
