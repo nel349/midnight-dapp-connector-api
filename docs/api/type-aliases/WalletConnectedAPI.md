@@ -1,4 +1,4 @@
-[**@midnight-ntwrk/dapp-connector-api v4.0.0**](../README.md)
+[**@midnight-ntwrk/dapp-connector-api v4.0.1**](../README.md)
 
 ***
 
@@ -21,7 +21,7 @@ functionality for a DApp to interact with the wallet:
 
 ### balanceSealedTransaction()
 
-> **balanceSealedTransaction**(`tx`): `Promise`\<\{ `tx`: `string`; \}\>
+> **balanceSealedTransaction**(`tx`, `options?`): `Promise`\<\{ `tx`: `string`; \}\>
 
 Take sealed transaction (with proofs, signatures and cryptographically bound),
 pay fees, add necessary inputs and outputs to remove imbalances from it,
@@ -30,13 +30,21 @@ returning a transaction ready for submission
 This method is mainly expected to be used by DApps when they operate on transactions created by the wallet or when the DApp wants to be sure that wallet performs balancing in a separate intent.
 In such case, it is important to remember that some contracts might make use of fallible sections, in which case wallet won't be able to properly balance the transaction. In such cases, the DApp should use [balanceUnsealedTransaction](#balanceunsealedtransaction) instead.
 
-In relation to Ledger API (`@midnight-ntwrk/ledger-v6`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, Binding>`
+In relation to Ledger API (`@midnight-ntwrk/ledger-v<N>`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, Binding>`
+Options:
+`payFees` - whether wallet should pay fees for the issued transaction or not, true by default
 
 #### Parameters
 
 ##### tx
 
 `string`
+
+##### options?
+
+###### payFees?
+
+`boolean`
 
 #### Returns
 
@@ -46,7 +54,7 @@ In relation to Ledger API (`@midnight-ntwrk/ledger-v6`), this method expects a s
 
 ### balanceUnsealedTransaction()
 
-> **balanceUnsealedTransaction**(`tx`): `Promise`\<\{ `tx`: `string`; \}\>
+> **balanceUnsealedTransaction**(`tx`, `options?`): `Promise`\<\{ `tx`: `string`; \}\>
 
 Take unsealed transaction (with proofs, with no signatures and with preimage
 data for cryptographic binding), pay fees, add necessary inputs and outputs
@@ -54,13 +62,21 @@ to remove imbalances from it, returning a transaction ready for submission
 
 This method is expected to be used by DApps when interacting with contracts - in many cases when contracts interact with native tokens, where wallet may need to add inputs and outputs to an existing intent to properly balance the transaction.
 
-In relation to Ledger API (`@midnight-ntwrk/ledger-v6`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, PreBinding>`
+In relation to Ledger API (`@midnight-ntwrk/ledger-v<N>`), this method expects a serialized transaction of type `Transaction<SignatureEnabled, Proof, PreBinding>`
+Options:
+`payFees` - whether wallet should pay fees for the issued transaction or not, true by default
 
 #### Parameters
 
 ##### tx
 
 `string`
+
+##### options?
+
+###### payFees?
+
+`boolean`
 
 #### Returns
 
@@ -256,15 +272,24 @@ Options:
 
 ### makeTransfer()
 
-> **makeTransfer**(`desiredOutputs`): `Promise`\<\{ `tx`: `string`; \}\>
+> **makeTransfer**(`desiredOutputs`, `options?`): `Promise`\<\{ `tx`: `string`; \}\>
 
 Initialize a transfer transaction with desired outputs
+
+Options:
+`payFees` - whether wallet should pay fees for the issued transaction or not, true by default
 
 #### Parameters
 
 ##### desiredOutputs
 
 [`DesiredOutput`](DesiredOutput.md)[]
+
+##### options?
+
+###### payFees?
+
+`boolean`
 
 #### Returns
 
